@@ -1,0 +1,34 @@
+{
+	"geode": "4.4.0",
+	"gd": {
+		"win": "2.2074",
+		"mac": "2.2074",
+		"ios": "2.2074",
+		"android": "2.2074"
+	},
+	"id": "raydeeux.dynamiceventbutton",
+	"name": "DynamicEventButton",
+	"version": "v1.0.0",
+	"developer": "RayDeeUx",
+	"description": "Retextures the Event button based on the current Event level.",
+	"repository": "https://github.com/RayDeeUx/DynamicEventButton",
+	"settings": {
+		"enabled": {
+			"name": "Enabled",
+			"description": "Toggles the mod.",
+			"type": "bool",
+			"default": true
+		}
+	},
+	"dependencies": {
+		"geode.node-ids": ">=1.20.0"
+	},
+	"issues": {
+		"url": "https://discord.com/channels/911701438269386882/1205523212444639292",
+		"info": "Ping me <cl>(@erymanthus)</c> in the Geode SDK Discord server's <cl>#help</c> channel if you need help. <cr>DMs are NOT accepted.</c>"
+	},
+	"links": {
+		"community": "https://discord.gg/WqZBYdBWZW",
+		"homepage": "https://discord.com/channels/822510988409831486/1206371881222144020"
+	}
+}
