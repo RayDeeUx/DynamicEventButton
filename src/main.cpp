@@ -127,6 +127,50 @@ class $modify(MyCreatorLayer, CreatorLayer) {
 		fields->m_eventIcon->setID("dynamic-event-icon"_spr);
 		levelNameLabelShadow->setID("dynamic-event-label-shadow"_spr);
 		levelNameLabel->setID("dynamic-event-label"_spr);
+
+		if (!Mod::get()->getSettingValue<bool>("wordWrapping")) return;
+
+		if (currentEventName.length() < 16) return log::info("level name is not over 15 characters long, exiting early");
+
+		const std::vector<std::string>& splitName = string::split(currentEventName, " ");
+		if (splitName.size() == 1) return log::info("level name is one word, exiting early");
+
+		int longestWord = -1;
+		int index = -1;
+		int longestWordIndex = -1;
+		std::vector<int> wordLengths {};
+		std::string newLevelString = "";
+
+		for (const std::string& word : splitName) wordLengths.push_back(static_cast<int>(word.length()));
+		for (const int& length : wordLengths) {
+			index++;
+			if (length < longestWord) continue;
+			longestWord = length;
+			longestWordIndex = index;
+		}
+		log::info("longestWord: {}", longestWord);
+		log::info("longestWordIndex: {}", longestWordIndex);
+
+		index = -1;
+		for (const std::string& word : splitName) {
+			index++;
+			newLevelString = newLevelString.append(word);
+			if (index != longestWordIndex && index + 1 != longestWordIndex) {
+				newLevelString = newLevelString.append(" ");
+			} else {
+				newLevelString = newLevelString.append("\n");
+			}
+		}
+
+		levelNameLabel->setString(newLevelString.c_str());
+		levelNameLabel->setAlignment(kCCTextAlignmentCenter);
+		levelNameLabel->setScale(levelNameLabel->getScale() * 1.1f);
+		levelNameLabel->setPositionY(levelNameLabel->getPositionY() + 2.f);
+
+		levelNameLabelShadow->setString(newLevelString.c_str());
+		levelNameLabelShadow->setAlignment(kCCTextAlignmentCenter);
+		levelNameLabelShadow->setScale(levelNameLabelShadow->getScale() * 1.1f);
+		levelNameLabelShadow->setPositionY(levelNameLabelShadow->getPositionY() + 2.f);
 	}
 	void onEventLevelIconShadowDownloadFinished(const Result<>& shadowResult, const EventButtonData& eventButtonData, CCSprite* replacementSprite) {
 		const Fields* fields = this->m_fields.self();

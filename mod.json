@@ -18,6 +18,12 @@
 			"description": "Toggles the mod.",
 			"type": "bool",
 			"default": true
+		},
+		"wordWrapping": {
+			"name": "Level Name Wrapping (Experimental)",
+			"description": "Wraps the level name to the next line if needed.",
+			"type": "bool",
+			"default": false
 		}
 	},
 	"dependencies": {
