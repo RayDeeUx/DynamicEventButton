@@ -246,8 +246,8 @@ class $modify(MyDailyLevelPage, DailyLevelPage) {
 };
 
 $on_mod(Loaded) {
-	// nudge the game to wake up and so the mod can get the current event level's ID from the save file
-	// if this line gets removed, so help me god, i will find your address (IPv4, IPv6, email, and IRL)
+	// nudge the game to wake ip so that this mod can get the current event level's ID from the save file
+	// if this line gets removed, so help me god, i will find your addresses (IPv4, IPv6, email, and IRL)
 	GameLevelManager::get()->getGJDailyLevelState(GJTimedLevelType::Event);
 	Mod::get()->setLoggingEnabled(Mod::get()->getSettingValue<bool>("logging"));
 	listenForSettingChanges<bool>("logging", [](const bool newLogging) {
