@@ -24,6 +24,11 @@
 			"description": "Wraps the level name to the next line if needed.",
 			"type": "bool",
 			"default": false
+		},
+		"logging": {
+			"name": "Logging",
+			"type": "bool",
+			"default": false
 		}
 	},
 	"dependencies": {
