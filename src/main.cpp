@@ -90,9 +90,13 @@ class $modify(MyCreatorLayer, CreatorLayer) {
 		}
 
 		CategoryButtonSprite* replacementSprite = CategoryButtonSprite::create(fields->m_eventIcon);
-		if (currentEventID != 14) fields->m_eventIcon->setScale(fields->m_eventIcon->getScale() * .75f); // boomkitty + arclia special treatment
 		fields->m_eventIcon->setPosition({50.f, 60.f});
 		fields->m_eventIcon->setZOrder(1);
+		if (currentEventID != 14) {
+			// boomkitty + arclia special treatment
+			fields->m_eventIcon->setScale(fields->m_eventIcon->getScale() * .75f);
+			fields->m_eventIcon->setPositionX(52.5f);
+		}
 
 		fields->m_eventIconShadow = Ref(LazySprite::create({40.f, 40.f}, false));\
 		fields->m_eventIconShadow->setLoadCallback([this, eventButtonData, replacementSprite](const Result<>& shadowResult) {\
