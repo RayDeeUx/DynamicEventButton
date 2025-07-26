@@ -9,12 +9,13 @@ using namespace geode::prelude;
 struct EventButtonData {
 	int eventID;
 	std::string eventName;
+	std::string formattedURL;
 };
 
 #define LOAD_LAZY_SPRITE(mcl, eventID, eventName)\
 	MyCreatorLayer::Fields* fields = mcl->m_fields.self();\
-	EventButtonData currentEventData = { eventID, eventName };\
 	const std::string& formattedURL = fmt::format("https://raw.githubusercontent.com/RayDeeUx/DynamicEventButtonData/main/icons/{}.png", eventID);\
+	EventButtonData currentEventData = { eventID, eventName, formattedURL };\
 	fields->m_eventIcon = Ref(LazySprite::create({40.f, 40.f}, false));\
 	fields->m_eventIcon->setLoadCallback([mcl, currentEventData](const Result<>& result) {\
 		mcl->onEventLevelIconDownloadFinished(result, currentEventData);\
@@ -52,6 +53,7 @@ struct EventButtonData {
 class $modify(MyCreatorLayer, CreatorLayer) {
 	struct Fields {
 		Ref<LazySprite> m_eventIcon;
+		Ref<LazySprite> m_eventIconShadow;
 	};
 	bool init() {
 		if (!CreatorLayer::init()) return false;
@@ -73,7 +75,7 @@ class $modify(MyCreatorLayer, CreatorLayer) {
 		return true;
 	}
 	void onEventLevelIconDownloadFinished(const Result<>& result, const EventButtonData& eventButtonData) {
-		const Fields* fields = m_fields.self();
+		Fields* fields = this->m_fields.self();
 		const int currentEventID = eventButtonData.eventID;
 		const std::string& currentEventName = eventButtonData.eventName;
 		if (!fields || !fields->m_eventIcon || result.isErr()) return log::info("could not load level icon for event level ID {} ({})", currentEventID, currentEventName);
@@ -86,12 +88,20 @@ class $modify(MyCreatorLayer, CreatorLayer) {
 			if (string::startsWith(node->getID(), "dynamic-event-"_spr)) continue;
 			node->setSkewX(90.f); // quasi-invisibility; aint nobody got time to change this node trait and i sure as hell won't store node traits in a new data structure
 		}
+
 		CategoryButtonSprite* replacementSprite = CategoryButtonSprite::create(fields->m_eventIcon);
 		if (currentEventID != 14) fields->m_eventIcon->setScale(fields->m_eventIcon->getScale() * .75f); // boomkitty + arclia special treatment
-		fields->m_eventIcon->setPosition({52.f, 60.f});
+		fields->m_eventIcon->setPosition({50.f, 60.f});
+		fields->m_eventIcon->setZOrder(1);
+
+		fields->m_eventIconShadow = Ref(LazySprite::create({40.f, 40.f}, false));\
+		fields->m_eventIconShadow->setLoadCallback([this, eventButtonData, replacementSprite](const Result<>& shadowResult) {\
+			this->onEventLevelIconShadowDownloadFinished(shadowResult, eventButtonData, replacementSprite);\
+		});\
+		fields->m_eventIconShadow->loadFromUrl(eventButtonData.formattedURL);
 
 		CCLabelBMFont* levelNameLabelShadow = CCLabelBMFont::create(currentEventName.c_str(), "bigFont.fnt");
-		levelNameLabelShadow->setPosition({52.f + .65f, 20.5f - .65f});
+		levelNameLabelShadow->setPosition({52.f + .85f, 20.5f - .85f});
 		levelNameLabelShadow->limitLabelWidth(85.f, 1.f, .0001f);
 		levelNameLabelShadow->setColor({0, 0, 0});
 		levelNameLabelShadow->setOpacity(128);
@@ -113,6 +123,22 @@ class $modify(MyCreatorLayer, CreatorLayer) {
 		fields->m_eventIcon->setID("dynamic-event-icon"_spr);
 		levelNameLabelShadow->setID("dynamic-event-label-shadow"_spr);
 		levelNameLabel->setID("dynamic-event-label"_spr);
+	}
+	void onEventLevelIconShadowDownloadFinished(const Result<>& shadowResult, const EventButtonData& eventButtonData, CCSprite* replacementSprite) {
+		const Fields* fields = this->m_fields.self();
+
+		if (!fields || !fields->m_eventIconShadow || shadowResult.isErr()) return log::info("could not load level icon shadow for event level ID {} ({})", eventButtonData.eventID, eventButtonData.eventName);
+
+		replacementSprite->addChild(fields->m_eventIconShadow);
+
+		fields->m_eventIconShadow->setOpacity(96);
+		fields->m_eventIconShadow->setColor({0, 0, 0});
+		fields->m_eventIconShadow->setScale(fields->m_eventIcon->getScale());
+		fields->m_eventIconShadow->setZOrder(fields->m_eventIcon->getZOrder() - 1);
+		fields->m_eventIconShadow->setPosition(fields->m_eventIcon->getPosition());
+		fields->m_eventIconShadow->setPositionX(fields->m_eventIconShadow->getPositionX() + 2.f);
+		fields->m_eventIconShadow->setPositionY(fields->m_eventIconShadow->getPositionY() - 1.5f);
+		fields->m_eventIconShadow->setID("dynamic-event-icon-shadow"_spr);
 	}
 };
 
