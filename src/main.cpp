@@ -97,6 +97,7 @@ class $modify(MyCreatorLayer, CreatorLayer) {
 			fields->m_eventIcon->setScale(fields->m_eventIcon->getScale() * .75f);
 			fields->m_eventIcon->setPositionX(52.5f);
 		}
+		fields->m_eventIcon->setScale(fields->m_eventIcon->getScale() / (CCDirector::get()->getContentScaleFactor() / 4.f));
 
 		fields->m_eventIconShadow = Ref(LazySprite::create({40.f, 40.f}, false));\
 		fields->m_eventIconShadow->setLoadCallback([this, eventButtonData, replacementSprite](const Result<>& shadowResult) {\
