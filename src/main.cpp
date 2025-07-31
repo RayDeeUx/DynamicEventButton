@@ -18,6 +18,12 @@ static const std::unordered_map<TextureQuality, float> textureQualityToScale {
 	{kTextureQualityHigh, 1.f},
 };
 
+static const std::unordered_map<TextureQuality, float> textureQualityToScaleGangster {
+	{kTextureQualityLow, 1.65f},
+	{kTextureQualityMedium, .85f},
+	{kTextureQualityHigh, 1.f},
+};
+
 #define LOAD_LAZY_SPRITE(mcl, eventID, eventName)\
 	MyCreatorLayer::Fields* fields = mcl->m_fields.self();\
 	const std::string& formattedURL = fmt::format("https://raw.githubusercontent.com/RayDeeUx/DynamicEventButtonData/main/icons/{}.png", eventID);\
@@ -95,6 +101,8 @@ class $modify(MyCreatorLayer, CreatorLayer) {
 			node->setSkewX(90.f); // quasi-invisibility; aint nobody got time to change this node trait and i sure as hell won't store node traits in a new data structure
 		}
 
+		const TextureQuality quality = CCDirector::get()->getLoadedTextureQuality();
+		const float textureQualityScale = textureQualityToScale.at(quality);
 		CategoryButtonSprite* replacementSprite = CategoryButtonSprite::create(fields->m_eventIcon);
 		fields->m_eventIcon->setPosition({50.f, 60.f});
 		fields->m_eventIcon->setZOrder(1);
@@ -102,8 +110,10 @@ class $modify(MyCreatorLayer, CreatorLayer) {
 			// boomkitty + arclia special treatment
 			fields->m_eventIcon->setScale(fields->m_eventIcon->getScale() * .75f);
 			fields->m_eventIcon->setPositionX(52.5f);
+		} else {
+			fields->m_eventIcon->setScale(fields->m_eventIcon->getScale() * textureQualityToScaleGangster.at(quality) * textureQualityScale);
 		}
-		fields->m_eventIcon->setScale(fields->m_eventIcon->getScale() * textureQualityToScale.at(CCDirector::get()->getLoadedTextureQuality()));
+		fields->m_eventIcon->setScale(fields->m_eventIcon->getScale() * textureQualityScale);
 
 		fields->m_eventIconShadow = Ref(LazySprite::create({40.f, 40.f}, false));\
 		fields->m_eventIconShadow->setLoadCallback([this, eventButtonData, replacementSprite](const Result<>& shadowResult) {\
