@@ -12,6 +12,12 @@ struct EventButtonData {
 	std::string formattedURL;
 };
 
+static const std::unordered_map<TextureQuality, float> textureQualityToScale {
+	{kTextureQualityLow, .4f},
+	{kTextureQualityMedium, .8f},
+	{kTextureQualityHigh, 1.f},
+};
+
 #define LOAD_LAZY_SPRITE(mcl, eventID, eventName)\
 	MyCreatorLayer::Fields* fields = mcl->m_fields.self();\
 	const std::string& formattedURL = fmt::format("https://raw.githubusercontent.com/RayDeeUx/DynamicEventButtonData/main/icons/{}.png", eventID);\
@@ -97,7 +103,7 @@ class $modify(MyCreatorLayer, CreatorLayer) {
 			fields->m_eventIcon->setScale(fields->m_eventIcon->getScale() * .75f);
 			fields->m_eventIcon->setPositionX(52.5f);
 		}
-		fields->m_eventIcon->setScale(fields->m_eventIcon->getScale() * (CCDirector::get()->getContentScaleFactor() / 4.f));
+		fields->m_eventIcon->setScale(fields->m_eventIcon->getScale() * textureQualityToScale.at(CCDirector::get()->getLoadedTextureQuality()));
 
 		fields->m_eventIconShadow = Ref(LazySprite::create({40.f, 40.f}, false));\
 		fields->m_eventIconShadow->setLoadCallback([this, eventButtonData, replacementSprite](const Result<>& shadowResult) {\
@@ -247,7 +253,7 @@ class $modify(MyDailyLevelPage, DailyLevelPage) {
 };
 
 $on_mod(Loaded) {
-	// nudge the game to wake ip so that this mod can get the current event level's ID from the save file
+	// nudge the game to wake up so that this mod can get the current event level's ID from the save file
 	// if this line gets removed, so help me god, i will find your addresses (IPv4, IPv6, email, and IRL)
 	GameLevelManager::get()->getGJDailyLevelState(GJTimedLevelType::Event);
 	Mod::get()->setLoggingEnabled(Mod::get()->getSettingValue<bool>("logging"));
