@@ -96,17 +96,17 @@ class $modify(MyCreatorLayer, CreatorLayer) {
 		}
 
 		CategoryButtonSprite* replacementSprite = CategoryButtonSprite::create(fields->m_eventIcon);
-		fields->m_eventIcon->setPosition({50.f, 60.f});
+		fields->m_eventIcon->setPosition({52.5f, 60.f});
 		fields->m_eventIcon->setZOrder(1);
 		if (currentEventID == 14) {
 			// boomkitty + arclia special treatment
 			fields->m_eventIcon->setScale(fields->m_eventIcon->getScale()* textureQualityToScaleForGangsterRapOnly.at(CCDirector::get()->getLoadedTextureQuality()));
-			fields->m_eventIcon->setPositionX(52.5f);
+			fields->m_eventIcon->setPositionX(50.f);
 		} else {
 			const CCSize originalSize = replacementSprite->getContentSize();
 			const CCSize replacementSize = fields->m_eventIcon->getContentSize();
-			const float xRatio = (originalSize.width - 15.f) / replacementSize.width;
-			const float yRatio = (originalSize.height - 15.f) / replacementSize.height;
+			const float xRatio = (originalSize.width - 25.f) / replacementSize.width;
+			const float yRatio = (originalSize.height - 35.f) / replacementSize.height;
 			fields->m_eventIcon->setScale(std::min(xRatio, yRatio));
 		}
 
