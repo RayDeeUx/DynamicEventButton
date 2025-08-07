@@ -12,16 +12,10 @@ struct EventButtonData {
 	std::string formattedURL;
 };
 
-static const std::unordered_map<TextureQuality, float> textureQualityToScale {
-	{kTextureQualityLow, .4f},
-	{kTextureQualityMedium, .8f},
-	{kTextureQualityHigh, 1.f},
-};
-
-static const std::unordered_map<TextureQuality, float> textureQualityToScaleGangster {
-	{kTextureQualityLow, 1.65f},
-	{kTextureQualityMedium, .85f},
-	{kTextureQualityHigh, 1.f},
+static const std::unordered_map<TextureQuality, float> textureQualityToScaleForGangsterRapOnly {
+	{kTextureQualityLow, .4f * .4f * 1.65f},
+	{kTextureQualityMedium, .8f * .8f * .85f},
+	{kTextureQualityHigh, 1.f * 1.f * 1.f},
 };
 
 #define LOAD_LAZY_SPRITE(mcl, eventID, eventName)\
@@ -101,19 +95,20 @@ class $modify(MyCreatorLayer, CreatorLayer) {
 			node->setSkewX(90.f); // quasi-invisibility; aint nobody got time to change this node trait and i sure as hell won't store node traits in a new data structure
 		}
 
-		const TextureQuality quality = CCDirector::get()->getLoadedTextureQuality();
-		const float textureQualityScale = textureQualityToScale.at(quality);
 		CategoryButtonSprite* replacementSprite = CategoryButtonSprite::create(fields->m_eventIcon);
 		fields->m_eventIcon->setPosition({50.f, 60.f});
 		fields->m_eventIcon->setZOrder(1);
-		if (currentEventID != 14) {
+		if (currentEventID == 14) {
 			// boomkitty + arclia special treatment
-			fields->m_eventIcon->setScale(fields->m_eventIcon->getScale() * .75f);
+			fields->m_eventIcon->setScale(fields->m_eventIcon->getScale()* textureQualityToScaleForGangsterRapOnly.at(CCDirector::get()->getLoadedTextureQuality()));
 			fields->m_eventIcon->setPositionX(52.5f);
 		} else {
-			fields->m_eventIcon->setScale(fields->m_eventIcon->getScale() * textureQualityToScaleGangster.at(quality) * textureQualityScale);
+			const CCSize originalSize = replacementSprite->getContentSize();
+			const CCSize replacementSize = fields->m_eventIcon->getContentSize();
+			const float xRatio = (originalSize.width - 15.f) / replacementSize.width;
+			const float yRatio = (originalSize.height - 15.f) / replacementSize.height;
+			fields->m_eventIcon->setScale(std::min(xRatio, yRatio));
 		}
-		fields->m_eventIcon->setScale(fields->m_eventIcon->getScale() * textureQualityScale);
 
 		fields->m_eventIconShadow = Ref(LazySprite::create({40.f, 40.f}, false));\
 		fields->m_eventIconShadow->setLoadCallback([this, eventButtonData, replacementSprite](const Result<>& shadowResult) {\
