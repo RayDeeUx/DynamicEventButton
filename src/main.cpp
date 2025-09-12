@@ -227,9 +227,6 @@ class $modify(MyDailyLevelNode, DailyLevelNode) {
 		const int glmEventID = alwaysSkeletal ? 15 : GameLevelManager::get()->m_eventID - 200000;
 		const int eventID = alwaysSkeletal ? 15 : level->m_dailyID.value() - 200000;
 		const std::string& currentEventLevelName = alwaysSkeletal ? "Skeletal Shenanigans" : level->m_levelName;
-
-		const int glmEventID = GameLevelManager::get()->m_eventID - 200000;
-		const int eventID = level->m_dailyID.value() - 200000;
 		log::info("[init] eventID: {}", eventID);
 		log::info("[init] glmEventID: {}", glmEventID);
 		if (eventID != glmEventID) return true;
