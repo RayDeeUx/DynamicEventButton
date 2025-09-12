@@ -25,6 +25,11 @@
 			"type": "bool",
 			"default": false
 		},
+		"alwaysSkeletal": {
+			"name": "Always Skeletal Shenanigans",
+			"type": "bool",
+			"default": false
+		},
 		"logging": {
 			"name": "Logging",
 			"type": "bool",

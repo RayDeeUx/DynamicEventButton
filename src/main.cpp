@@ -70,8 +70,9 @@ class $modify(MyCreatorLayer, CreatorLayer) {
 		const GJGameLevel* eventLevel = glm->getSavedDailyLevel(glm->m_activeEventID);
 		if (!eventLevel) return true;
 
-		const int currentEventID = glm->m_activeEventID - 200000;
-		const std::string& currentEventLevelName = eventLevel->m_levelName;
+		const bool alwaysSkeletal = Mod::get()->getSettingValue<bool>("alwaysSkeletal");
+		const int currentEventID = alwaysSkeletal ? 15 : glm->m_activeEventID - 200000;
+		const std::string& currentEventLevelName = alwaysSkeletal ? "Skeletal Shenanigans" : eventLevel->m_levelName;
 
 		log::info("m_activeEventID (CURRENT EVENT ID): {}", currentEventID);
 		log::info("currentEventLevelName: {}", currentEventLevelName);
@@ -222,6 +223,11 @@ class $modify(MyDailyLevelNode, DailyLevelNode) {
 		if (!Mod::get()->getSettingValue<bool>("enabled")) return true;
 		if (!level || !dlp) return true;
 
+		const bool alwaysSkeletal = Mod::get()->getSettingValue<bool>("alwaysSkeletal");
+		const int glmEventID = alwaysSkeletal ? 15 : GameLevelManager::get()->m_eventID - 200000;
+		const int eventID = alwaysSkeletal ? 15 : level->m_dailyID.value() - 200000;
+		const std::string& currentEventLevelName = alwaysSkeletal ? "Skeletal Shenanigans" : level->m_levelName;
+
 		const int glmEventID = GameLevelManager::get()->m_eventID - 200000;
 		const int eventID = level->m_dailyID.value() - 200000;
 		log::info("[init] eventID: {}", eventID);
@@ -234,7 +240,7 @@ class $modify(MyDailyLevelNode, DailyLevelNode) {
 		RESTORE_NODE_TRAITS(childSprite);
 
 		MyCreatorLayer* mcl = static_cast<MyCreatorLayer*>(cl);
-		LOAD_LAZY_SPRITE(mcl, eventID, level->m_levelName);
+		LOAD_LAZY_SPRITE(mcl, eventID, currentEventLevelName);
 
 		return true;
 	}
