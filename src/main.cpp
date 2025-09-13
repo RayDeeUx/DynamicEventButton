@@ -141,6 +141,11 @@ class $modify(MyCreatorLayer, CreatorLayer) {
 		levelNameLabelShadow->setID("dynamic-event-label-shadow"_spr);
 		levelNameLabel->setID("dynamic-event-label"_spr);
 
+		if (Mod::get()->getSettingValue<bool>("noNameLabel")) {
+			levelNameLabel->setVisible(false);
+			levelNameLabelShadow->setVisible(false);
+		}
+
 		if (!Mod::get()->getSettingValue<bool>("wordWrapping")) return;
 
 		if (currentEventName.length() < 16) return log::info("level name is not over 15 characters long, exiting early");
@@ -188,7 +193,7 @@ class $modify(MyCreatorLayer, CreatorLayer) {
 	void onEventLevelIconShadowDownloadFinished(const Result<>& shadowResult, const EventButtonData& eventButtonData, CCSprite* replacementSprite) {
 		const Fields* fields = this->m_fields.self();
 
-		if (!fields || !fields->m_eventIconShadow || shadowResult.isErr()) return log::info("could not load level icon shadow for event level ID {} ({})", eventButtonData.eventID, eventButtonData.eventName);
+		if (!fields || !fields->m_eventIconShadow || !fields->m_eventIcon || shadowResult.isErr()) return log::info("could not load level icon shadow for event level ID {} ({})", eventButtonData.eventID, eventButtonData.eventName);
 
 		replacementSprite->addChild(fields->m_eventIconShadow);
 
@@ -200,6 +205,11 @@ class $modify(MyCreatorLayer, CreatorLayer) {
 		fields->m_eventIconShadow->setPositionX(fields->m_eventIconShadow->getPositionX() + 2.f);
 		fields->m_eventIconShadow->setPositionY(fields->m_eventIconShadow->getPositionY() - 1.5f);
 		fields->m_eventIconShadow->setID("dynamic-event-icon-shadow"_spr);
+
+		if (Mod::get()->getSettingValue<bool>("noNameLabel")) {
+			fields->m_eventIcon->setPositionY(fields->m_eventIcon->getPositionY() - 7.5f);
+			fields->m_eventIconShadow->setPositionY(fields->m_eventIconShadow->getPositionY() - 7.5f);
+		}
 	}
 };
 
