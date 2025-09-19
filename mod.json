@@ -8,7 +8,7 @@
 	},
 	"id": "raydeeux.dynamiceventbutton",
 	"name": "DynamicEventButton",
-	"version": "v1.0.1",
+	"version": "v1.0.2",
 	"developer": "RayDeeUx",
 	"description": "Retextures the Event button based on the current Event level.",
 	"repository": "https://github.com/RayDeeUx/DynamicEventButton",

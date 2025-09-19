@@ -118,15 +118,15 @@ class $modify(MyCreatorLayer, CreatorLayer) {
 		fields->m_eventIconShadow->loadFromUrl(eventButtonData.formattedURL);
 
 		CCLabelBMFont* levelNameLabelShadow = CCLabelBMFont::create(currentEventName.c_str(), "bigFont.fnt");
-		levelNameLabelShadow->setPosition({52.f + .85f, 20.5f - .85f});
-		levelNameLabelShadow->limitLabelWidth(85.f, 1.f, .0001f);
+		levelNameLabelShadow->setPosition({52.f + .85f, 22.5f - .85f});
+		levelNameLabelShadow->limitLabelWidth(80.f, 1.f, .0001f);
 		levelNameLabelShadow->setColor({0, 0, 0});
 		levelNameLabelShadow->setOpacity(128);
 		replacementSprite->addChild(levelNameLabelShadow);
 
 		CCLabelBMFont* levelNameLabel = CCLabelBMFont::create(currentEventName.c_str(), "bigFont.fnt");
-		levelNameLabel->limitLabelWidth(85.f, 1.f, .0001f);
-		levelNameLabel->setPosition({52.f, 20.5f});
+		levelNameLabel->limitLabelWidth(80.f, 1.f, .0001f);
+		levelNameLabel->setPosition({52.f, 22.5f});
 		replacementSprite->addChild(levelNameLabel);
 
 		childSprite->setCascadeOpacityEnabled(false);
